@@ -1,0 +1,898 @@
+
+
+============================== 2023-02-08 12:55:24.054992 | 378cdb66-db03-44fb-82a0-1523bf630edd ==============================
+[0m12:55:24.054992 [info ] [MainThread]: Running with dbt=1.4.1
+[0m12:55:24.057383 [debug] [MainThread]: running dbt with arguments {'write_json': True, 'use_colors': True, 'printer_width': 80, 'version_check': True, 'partial_parse': True, 'static_parser': True, 'profiles_dir': '/Users/afinkelstein/.dbt', 'send_anonymous_usage_stats': True, 'quiet': False, 'no_print': False, 'cache_selected_only': False, 'which': 'run', 'rpc_method': 'run', 'indirect_selection': 'eager'}
+[0m12:55:24.057615 [debug] [MainThread]: Tracking: tracking
+[0m12:55:24.080758 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10925b2b0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1092650d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1092652b0>]}
+[0m12:55:24.279068 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 1 files changed.
+[0m12:55:24.279703 [debug] [MainThread]: Partial parsing: updated file: test_dbt://models/example/metrics.yml
+[0m12:55:24.296366 [debug] [MainThread]: 1603: static parser failed on example/metric_test.sql
+[0m12:55:24.362940 [debug] [MainThread]: 1602: parser fallback to jinja rendering on example/metric_test.sql
+[0m12:55:24.391365 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '378cdb66-db03-44fb-82a0-1523bf630edd', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1095f53a0>]}
+[0m12:55:24.403171 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '378cdb66-db03-44fb-82a0-1523bf630edd', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x108fef5e0>]}
+[0m12:55:24.403844 [info ] [MainThread]: Found 4 models, 4 tests, 0 snapshots, 0 analyses, 515 macros, 0 operations, 0 seed files, 0 sources, 0 exposures, 2 metrics
+[0m12:55:24.404188 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '378cdb66-db03-44fb-82a0-1523bf630edd', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10925ef70>]}
+[0m12:55:24.405624 [info ] [MainThread]: 
+[0m12:55:24.407394 [debug] [MainThread]: Acquiring new postgres connection 'master'
+[0m12:55:24.408431 [debug] [ThreadPool]: Acquiring new postgres connection 'list_test_dbt'
+[0m12:55:24.421645 [debug] [ThreadPool]: Using postgres connection "list_test_dbt"
+[0m12:55:24.422232 [debug] [ThreadPool]: On list_test_dbt: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "connection_name": "list_test_dbt"} */
+
+    select distinct nspname from pg_namespace
+  
+[0m12:55:24.422456 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m12:55:24.475382 [debug] [ThreadPool]: SQL status: SELECT 4 in 0 seconds
+[0m12:55:24.476943 [debug] [ThreadPool]: On list_test_dbt: Close
+[0m12:55:24.478819 [debug] [ThreadPool]: Acquiring new postgres connection 'list_test_dbt_public'
+[0m12:55:24.486182 [debug] [ThreadPool]: Using postgres connection "list_test_dbt_public"
+[0m12:55:24.486519 [debug] [ThreadPool]: On list_test_dbt_public: BEGIN
+[0m12:55:24.486757 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m12:55:24.510862 [debug] [ThreadPool]: SQL status: BEGIN in 0 seconds
+[0m12:55:24.511209 [debug] [ThreadPool]: Using postgres connection "list_test_dbt_public"
+[0m12:55:24.511450 [debug] [ThreadPool]: On list_test_dbt_public: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "connection_name": "list_test_dbt_public"} */
+select
+      'test_dbt' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'public'
+    union all
+    select
+      'test_dbt' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'public'
+  
+[0m12:55:24.530104 [debug] [ThreadPool]: SQL status: SELECT 4 in 0 seconds
+[0m12:55:24.531505 [debug] [ThreadPool]: On list_test_dbt_public: ROLLBACK
+[0m12:55:24.533119 [debug] [ThreadPool]: On list_test_dbt_public: Close
+[0m12:55:24.539943 [debug] [MainThread]: Using postgres connection "master"
+[0m12:55:24.540287 [debug] [MainThread]: On master: BEGIN
+[0m12:55:24.540525 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m12:55:24.562622 [debug] [MainThread]: SQL status: BEGIN in 0 seconds
+[0m12:55:24.562976 [debug] [MainThread]: Using postgres connection "master"
+[0m12:55:24.563213 [debug] [MainThread]: On master: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "connection_name": "master"} */
+with relation as (
+        select
+            pg_rewrite.ev_class as class,
+            pg_rewrite.oid as id
+        from pg_rewrite
+    ),
+    class as (
+        select
+            oid as id,
+            relname as name,
+            relnamespace as schema,
+            relkind as kind
+        from pg_class
+    ),
+    dependency as (
+        select distinct
+            pg_depend.objid as id,
+            pg_depend.refobjid as ref
+        from pg_depend
+    ),
+    schema as (
+        select
+            pg_namespace.oid as id,
+            pg_namespace.nspname as name
+        from pg_namespace
+        where nspname != 'information_schema' and nspname not like 'pg\_%'
+    ),
+    referenced as (
+        select
+            relation.id AS id,
+            referenced_class.name ,
+            referenced_class.schema ,
+            referenced_class.kind
+        from relation
+        join class as referenced_class on relation.class=referenced_class.id
+        where referenced_class.kind in ('r', 'v')
+    ),
+    relationships as (
+        select
+            referenced.name as referenced_name,
+            referenced.schema as referenced_schema_id,
+            dependent_class.name as dependent_name,
+            dependent_class.schema as dependent_schema_id,
+            referenced.kind as kind
+        from referenced
+        join dependency on referenced.id=dependency.id
+        join class as dependent_class on dependency.ref=dependent_class.id
+        where
+            (referenced.name != dependent_class.name or
+             referenced.schema != dependent_class.schema)
+    )
+
+    select
+        referenced_schema.name as referenced_schema,
+        relationships.referenced_name as referenced_name,
+        dependent_schema.name as dependent_schema,
+        relationships.dependent_name as dependent_name
+    from relationships
+    join schema as dependent_schema on relationships.dependent_schema_id=dependent_schema.id
+    join schema as referenced_schema on relationships.referenced_schema_id=referenced_schema.id
+    group by referenced_schema, referenced_name, dependent_schema, dependent_name
+    order by referenced_schema, referenced_name, dependent_schema, dependent_name;
+[0m12:55:24.595301 [debug] [MainThread]: SQL status: SELECT 3 in 0 seconds
+[0m12:55:24.598255 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '378cdb66-db03-44fb-82a0-1523bf630edd', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x109516c70>]}
+[0m12:55:24.598870 [debug] [MainThread]: On master: ROLLBACK
+[0m12:55:24.600749 [debug] [MainThread]: Using postgres connection "master"
+[0m12:55:24.601111 [debug] [MainThread]: On master: BEGIN
+[0m12:55:24.603662 [debug] [MainThread]: SQL status: BEGIN in 0 seconds
+[0m12:55:24.603997 [debug] [MainThread]: On master: COMMIT
+[0m12:55:24.604283 [debug] [MainThread]: Using postgres connection "master"
+[0m12:55:24.604547 [debug] [MainThread]: On master: COMMIT
+[0m12:55:24.606263 [debug] [MainThread]: SQL status: COMMIT in 0 seconds
+[0m12:55:24.606582 [debug] [MainThread]: On master: Close
+[0m12:55:24.607246 [info ] [MainThread]: Concurrency: 5 threads (target='dev')
+[0m12:55:24.607611 [info ] [MainThread]: 
+[0m12:55:24.612848 [debug] [Thread-1  ]: Began running node model.metrics.dbt_metrics_default_calendar
+[0m12:55:24.613220 [debug] [Thread-2  ]: Began running node model.test_dbt.my_first_dbt_model
+[0m12:55:24.613659 [info ] [Thread-1  ]: 1 of 4 START sql table model public.dbt_metrics_default_calendar ............... [RUN]
+[0m12:55:24.614134 [info ] [Thread-2  ]: 2 of 4 START sql table model public.my_first_dbt_model ......................... [RUN]
+[0m12:55:24.614858 [debug] [Thread-1  ]: Acquiring new postgres connection 'model.metrics.dbt_metrics_default_calendar'
+[0m12:55:24.615456 [debug] [Thread-2  ]: Acquiring new postgres connection 'model.test_dbt.my_first_dbt_model'
+[0m12:55:24.615766 [debug] [Thread-1  ]: Began compiling node model.metrics.dbt_metrics_default_calendar
+[0m12:55:24.616085 [debug] [Thread-2  ]: Began compiling node model.test_dbt.my_first_dbt_model
+[0m12:55:24.642317 [debug] [Thread-1  ]: Using postgres connection "model.metrics.dbt_metrics_default_calendar"
+[0m12:55:24.645377 [debug] [Thread-2  ]: Writing injected SQL for node "model.test_dbt.my_first_dbt_model"
+[0m12:55:24.645719 [debug] [Thread-1  ]: On model.metrics.dbt_metrics_default_calendar: BEGIN
+[0m12:55:24.646109 [debug] [Thread-1  ]: Opening a new connection, currently in state closed
+[0m12:55:24.646555 [debug] [Thread-2  ]: Timing info for model.test_dbt.my_first_dbt_model (compile): 2023-02-08 12:55:24.642609 => 2023-02-08 12:55:24.646477
+[0m12:55:24.646852 [debug] [Thread-2  ]: Began executing node model.test_dbt.my_first_dbt_model
+[0m12:55:24.677698 [debug] [Thread-1  ]: SQL status: BEGIN in 0 seconds
+[0m12:55:24.688299 [debug] [Thread-1  ]: Using postgres connection "model.metrics.dbt_metrics_default_calendar"
+[0m12:55:24.693963 [debug] [Thread-2  ]: Writing runtime sql for node "model.test_dbt.my_first_dbt_model"
+[0m12:55:24.694273 [debug] [Thread-1  ]: On model.metrics.dbt_metrics_default_calendar: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "node_id": "model.metrics.dbt_metrics_default_calendar"} */
+
+
+        select 
+        ((cast('2030-01-01' as date))::date - (cast('1990-01-01' as date))::date)
+    
+[0m12:55:24.695020 [debug] [Thread-2  ]: Using postgres connection "model.test_dbt.my_first_dbt_model"
+[0m12:55:24.695341 [debug] [Thread-2  ]: On model.test_dbt.my_first_dbt_model: BEGIN
+[0m12:55:24.695603 [debug] [Thread-2  ]: Opening a new connection, currently in state init
+[0m12:55:24.696538 [debug] [Thread-1  ]: SQL status: SELECT 1 in 0 seconds
+[0m12:55:24.714139 [debug] [Thread-1  ]: Writing injected SQL for node "model.metrics.dbt_metrics_default_calendar"
+[0m12:55:24.715374 [debug] [Thread-1  ]: Timing info for model.metrics.dbt_metrics_default_calendar (compile): 2023-02-08 12:55:24.616318 => 2023-02-08 12:55:24.715262
+[0m12:55:24.715781 [debug] [Thread-1  ]: Began executing node model.metrics.dbt_metrics_default_calendar
+[0m12:55:24.721469 [debug] [Thread-1  ]: Writing runtime sql for node "model.metrics.dbt_metrics_default_calendar"
+[0m12:55:24.721727 [debug] [Thread-2  ]: SQL status: BEGIN in 0 seconds
+[0m12:55:24.722149 [debug] [Thread-2  ]: Using postgres connection "model.test_dbt.my_first_dbt_model"
+[0m12:55:24.722422 [debug] [Thread-2  ]: On model.test_dbt.my_first_dbt_model: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "node_id": "model.test_dbt.my_first_dbt_model"} */
+
+  
+    
+
+  create  table "test_dbt"."public"."my_first_dbt_model__dbt_tmp"
+  as (
+    /*
+    Welcome to your first dbt model!
+    Did you know that you can also configure models directly within SQL files?
+    This will override configurations stated in dbt_project.yml
+
+    Try changing "table" to "view" below
+*/
+
+
+
+with source_data as (
+
+    select 1 as id,'alexey' as name, '1991-01-01' as date_id, 97 score
+    union all
+    select 1 as id,'alexey' as name, '1991-01-02' as date_id, 66 score
+    union all
+    select 2 as id,'sergey' as name, '1991-01-03' as date_id, 50 score
+
+)
+
+select *
+from source_data
+
+/*
+    Uncomment the line below to remove records with null `id` values
+*/
+
+-- where id is not null
+  );
+  
+[0m12:55:24.722638 [debug] [Thread-1  ]: Using postgres connection "model.metrics.dbt_metrics_default_calendar"
+[0m12:55:24.722959 [debug] [Thread-1  ]: On model.metrics.dbt_metrics_default_calendar: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "node_id": "model.metrics.dbt_metrics_default_calendar"} */
+
+  
+    
+
+  create  table "test_dbt"."public"."dbt_metrics_default_calendar__dbt_tmp"
+  as (
+    
+
+with days as (
+    
+
+
+
+
+
+with rawdata as (
+
+    
+
+    
+
+    with p as (
+        select 0 as generated_number union all select 1
+    ), unioned as (
+
+    select
+
+    
+    p0.generated_number * power(2, 0)
+     + 
+    
+    p1.generated_number * power(2, 1)
+     + 
+    
+    p2.generated_number * power(2, 2)
+     + 
+    
+    p3.generated_number * power(2, 3)
+     + 
+    
+    p4.generated_number * power(2, 4)
+     + 
+    
+    p5.generated_number * power(2, 5)
+     + 
+    
+    p6.generated_number * power(2, 6)
+     + 
+    
+    p7.generated_number * power(2, 7)
+     + 
+    
+    p8.generated_number * power(2, 8)
+     + 
+    
+    p9.generated_number * power(2, 9)
+     + 
+    
+    p10.generated_number * power(2, 10)
+     + 
+    
+    p11.generated_number * power(2, 11)
+     + 
+    
+    p12.generated_number * power(2, 12)
+     + 
+    
+    p13.generated_number * power(2, 13)
+    
+    
+    + 1
+    as generated_number
+
+    from
+
+    
+    p as p0
+     cross join 
+    
+    p as p1
+     cross join 
+    
+    p as p2
+     cross join 
+    
+    p as p3
+     cross join 
+    
+    p as p4
+     cross join 
+    
+    p as p5
+     cross join 
+    
+    p as p6
+     cross join 
+    
+    p as p7
+     cross join 
+    
+    p as p8
+     cross join 
+    
+    p as p9
+     cross join 
+    
+    p as p10
+     cross join 
+    
+    p as p11
+     cross join 
+    
+    p as p12
+     cross join 
+    
+    p as p13
+    
+    
+
+    )
+
+    select *
+    from unioned
+    where generated_number <= 14610
+    order by generated_number
+
+
+
+),
+
+all_periods as (
+
+    select (
+        
+
+    cast('1990-01-01' as date) + ((interval '1 day') * (row_number() over (order by 1) - 1))
+
+
+    ) as date_day
+    from rawdata
+
+),
+
+filtered as (
+
+    select *
+    from all_periods
+    where date_day <= cast('2030-01-01' as date)
+
+)
+
+select * from filtered
+
+
+),
+
+final as (
+    select 
+        cast(date_day as date) as date_day,
+        cast(date_trunc('week', date_day) as date) as date_week,
+        cast(date_trunc('month', date_day) as date) as date_month,
+        cast(date_trunc('quarter', date_day) as date) as date_quarter,
+        cast(date_trunc('year', date_day) as date) as date_year
+    from days
+)
+
+select * from final
+  );
+  
+[0m12:55:24.754558 [debug] [Thread-2  ]: SQL status: SELECT 3 in 0 seconds
+[0m12:55:24.761757 [debug] [Thread-2  ]: Using postgres connection "model.test_dbt.my_first_dbt_model"
+[0m12:55:24.762172 [debug] [Thread-2  ]: On model.test_dbt.my_first_dbt_model: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "node_id": "model.test_dbt.my_first_dbt_model"} */
+alter table "test_dbt"."public"."my_first_dbt_model" rename to "my_first_dbt_model__dbt_backup"
+[0m12:55:24.764073 [debug] [Thread-2  ]: SQL status: ALTER TABLE in 0 seconds
+[0m12:55:24.767570 [debug] [Thread-2  ]: Using postgres connection "model.test_dbt.my_first_dbt_model"
+[0m12:55:24.767839 [debug] [Thread-2  ]: On model.test_dbt.my_first_dbt_model: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "node_id": "model.test_dbt.my_first_dbt_model"} */
+alter table "test_dbt"."public"."my_first_dbt_model__dbt_tmp" rename to "my_first_dbt_model"
+[0m12:55:24.769484 [debug] [Thread-2  ]: SQL status: ALTER TABLE in 0 seconds
+[0m12:55:24.797678 [debug] [Thread-2  ]: On model.test_dbt.my_first_dbt_model: COMMIT
+[0m12:55:24.798001 [debug] [Thread-2  ]: Using postgres connection "model.test_dbt.my_first_dbt_model"
+[0m12:55:24.798270 [debug] [Thread-2  ]: On model.test_dbt.my_first_dbt_model: COMMIT
+[0m12:55:24.804978 [debug] [Thread-2  ]: SQL status: COMMIT in 0 seconds
+[0m12:55:24.811885 [debug] [Thread-2  ]: Using postgres connection "model.test_dbt.my_first_dbt_model"
+[0m12:55:24.812240 [debug] [Thread-2  ]: On model.test_dbt.my_first_dbt_model: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "node_id": "model.test_dbt.my_first_dbt_model"} */
+drop table if exists "test_dbt"."public"."my_first_dbt_model__dbt_backup" cascade
+[0m12:55:24.836587 [debug] [Thread-2  ]: SQL status: DROP TABLE in 0 seconds
+[0m12:55:24.838255 [debug] [Thread-2  ]: Timing info for model.test_dbt.my_first_dbt_model (execute): 2023-02-08 12:55:24.647048 => 2023-02-08 12:55:24.838195
+[0m12:55:24.838615 [debug] [Thread-2  ]: On model.test_dbt.my_first_dbt_model: Close
+[0m12:55:24.839332 [debug] [Thread-2  ]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '378cdb66-db03-44fb-82a0-1523bf630edd', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10969ed00>]}
+[0m12:55:24.839794 [info ] [Thread-2  ]: 2 of 4 OK created sql table model public.my_first_dbt_model .................... [[32mSELECT 3[0m in 0.22s]
+[0m12:55:24.841277 [debug] [Thread-2  ]: Finished running node model.test_dbt.my_first_dbt_model
+[0m12:55:24.842166 [debug] [Thread-4  ]: Began running node model.test_dbt.my_second_dbt_model
+[0m12:55:24.842619 [info ] [Thread-4  ]: 3 of 4 START sql view model public.my_second_dbt_model ......................... [RUN]
+[0m12:55:24.843308 [debug] [Thread-4  ]: Acquiring new postgres connection 'model.test_dbt.my_second_dbt_model'
+[0m12:55:24.843581 [debug] [Thread-4  ]: Began compiling node model.test_dbt.my_second_dbt_model
+[0m12:55:24.848690 [debug] [Thread-4  ]: Writing injected SQL for node "model.test_dbt.my_second_dbt_model"
+[0m12:55:24.849513 [debug] [Thread-4  ]: Timing info for model.test_dbt.my_second_dbt_model (compile): 2023-02-08 12:55:24.843797 => 2023-02-08 12:55:24.849430
+[0m12:55:24.849888 [debug] [Thread-4  ]: Began executing node model.test_dbt.my_second_dbt_model
+[0m12:55:24.872647 [debug] [Thread-4  ]: Writing runtime sql for node "model.test_dbt.my_second_dbt_model"
+[0m12:55:24.873749 [debug] [Thread-4  ]: Using postgres connection "model.test_dbt.my_second_dbt_model"
+[0m12:55:24.874093 [debug] [Thread-4  ]: On model.test_dbt.my_second_dbt_model: BEGIN
+[0m12:55:24.874327 [debug] [Thread-4  ]: Opening a new connection, currently in state init
+[0m12:55:24.896589 [debug] [Thread-4  ]: SQL status: BEGIN in 0 seconds
+[0m12:55:24.896947 [debug] [Thread-4  ]: Using postgres connection "model.test_dbt.my_second_dbt_model"
+[0m12:55:24.897165 [debug] [Thread-4  ]: On model.test_dbt.my_second_dbt_model: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "node_id": "model.test_dbt.my_second_dbt_model"} */
+
+  create view "test_dbt"."public"."my_second_dbt_model__dbt_tmp" as (
+    -- Use the `ref` function to select from other models
+
+select *
+from "test_dbt"."public"."my_first_dbt_model"
+where id = 1
+  );
+[0m12:55:24.912427 [debug] [Thread-4  ]: SQL status: CREATE VIEW in 0 seconds
+[0m12:55:24.916511 [debug] [Thread-4  ]: Using postgres connection "model.test_dbt.my_second_dbt_model"
+[0m12:55:24.916830 [debug] [Thread-4  ]: On model.test_dbt.my_second_dbt_model: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "node_id": "model.test_dbt.my_second_dbt_model"} */
+alter table "test_dbt"."public"."my_second_dbt_model__dbt_tmp" rename to "my_second_dbt_model"
+[0m12:55:24.918422 [debug] [Thread-4  ]: SQL status: ALTER TABLE in 0 seconds
+[0m12:55:24.920409 [debug] [Thread-4  ]: On model.test_dbt.my_second_dbt_model: COMMIT
+[0m12:55:24.920741 [debug] [Thread-4  ]: Using postgres connection "model.test_dbt.my_second_dbt_model"
+[0m12:55:24.920970 [debug] [Thread-4  ]: On model.test_dbt.my_second_dbt_model: COMMIT
+[0m12:55:24.932612 [debug] [Thread-4  ]: SQL status: COMMIT in 0 seconds
+[0m12:55:24.935803 [debug] [Thread-4  ]: Using postgres connection "model.test_dbt.my_second_dbt_model"
+[0m12:55:24.936100 [debug] [Thread-4  ]: On model.test_dbt.my_second_dbt_model: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "node_id": "model.test_dbt.my_second_dbt_model"} */
+drop view if exists "test_dbt"."public"."my_second_dbt_model__dbt_backup" cascade
+[0m12:55:24.938618 [debug] [Thread-4  ]: SQL status: DROP VIEW in 0 seconds
+[0m12:55:24.940734 [debug] [Thread-4  ]: Timing info for model.test_dbt.my_second_dbt_model (execute): 2023-02-08 12:55:24.850093 => 2023-02-08 12:55:24.940649
+[0m12:55:24.941183 [debug] [Thread-4  ]: On model.test_dbt.my_second_dbt_model: Close
+[0m12:55:24.942222 [debug] [Thread-4  ]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '378cdb66-db03-44fb-82a0-1523bf630edd', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10969eca0>]}
+[0m12:55:24.942732 [info ] [Thread-4  ]: 3 of 4 OK created sql view model public.my_second_dbt_model .................... [[32mCREATE VIEW[0m in 0.10s]
+[0m12:55:24.943162 [debug] [Thread-4  ]: Finished running node model.test_dbt.my_second_dbt_model
+[0m12:55:25.074427 [debug] [Thread-1  ]: SQL status: SELECT 14610 in 0 seconds
+[0m12:55:25.078116 [debug] [Thread-1  ]: Using postgres connection "model.metrics.dbt_metrics_default_calendar"
+[0m12:55:25.078425 [debug] [Thread-1  ]: On model.metrics.dbt_metrics_default_calendar: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "node_id": "model.metrics.dbt_metrics_default_calendar"} */
+alter table "test_dbt"."public"."dbt_metrics_default_calendar" rename to "dbt_metrics_default_calendar__dbt_backup"
+[0m12:55:25.079972 [debug] [Thread-1  ]: SQL status: ALTER TABLE in 0 seconds
+[0m12:55:25.083372 [debug] [Thread-1  ]: Using postgres connection "model.metrics.dbt_metrics_default_calendar"
+[0m12:55:25.083657 [debug] [Thread-1  ]: On model.metrics.dbt_metrics_default_calendar: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "node_id": "model.metrics.dbt_metrics_default_calendar"} */
+alter table "test_dbt"."public"."dbt_metrics_default_calendar__dbt_tmp" rename to "dbt_metrics_default_calendar"
+[0m12:55:25.085240 [debug] [Thread-1  ]: SQL status: ALTER TABLE in 0 seconds
+[0m12:55:25.087914 [debug] [Thread-1  ]: On model.metrics.dbt_metrics_default_calendar: COMMIT
+[0m12:55:25.088225 [debug] [Thread-1  ]: Using postgres connection "model.metrics.dbt_metrics_default_calendar"
+[0m12:55:25.088434 [debug] [Thread-1  ]: On model.metrics.dbt_metrics_default_calendar: COMMIT
+[0m12:55:25.097802 [debug] [Thread-1  ]: SQL status: COMMIT in 0 seconds
+[0m12:55:25.102433 [debug] [Thread-1  ]: Using postgres connection "model.metrics.dbt_metrics_default_calendar"
+[0m12:55:25.102733 [debug] [Thread-1  ]: On model.metrics.dbt_metrics_default_calendar: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "node_id": "model.metrics.dbt_metrics_default_calendar"} */
+drop table if exists "test_dbt"."public"."dbt_metrics_default_calendar__dbt_backup" cascade
+[0m12:55:25.124161 [debug] [Thread-1  ]: SQL status: DROP TABLE in 0 seconds
+[0m12:55:25.125674 [debug] [Thread-1  ]: Timing info for model.metrics.dbt_metrics_default_calendar (execute): 2023-02-08 12:55:24.716037 => 2023-02-08 12:55:25.125621
+[0m12:55:25.126721 [debug] [Thread-1  ]: On model.metrics.dbt_metrics_default_calendar: Close
+[0m12:55:25.151112 [debug] [Thread-1  ]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '378cdb66-db03-44fb-82a0-1523bf630edd', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x109803dc0>]}
+[0m12:55:25.151652 [info ] [Thread-1  ]: 1 of 4 OK created sql table model public.dbt_metrics_default_calendar .......... [[32mSELECT 14610[0m in 0.54s]
+[0m12:55:25.152063 [debug] [Thread-1  ]: Finished running node model.metrics.dbt_metrics_default_calendar
+[0m12:55:25.152816 [debug] [Thread-3  ]: Began running node model.test_dbt.metric_test
+[0m12:55:25.153424 [info ] [Thread-3  ]: 4 of 4 START sql view model public.metric_test ................................. [RUN]
+[0m12:55:25.154128 [debug] [Thread-3  ]: Acquiring new postgres connection 'model.test_dbt.metric_test'
+[0m12:55:25.154493 [debug] [Thread-3  ]: Began compiling node model.test_dbt.metric_test
+[0m12:55:25.343028 [debug] [Thread-3  ]: Writing injected SQL for node "model.test_dbt.metric_test"
+[0m12:55:25.343702 [debug] [Thread-3  ]: Timing info for model.test_dbt.metric_test (compile): 2023-02-08 12:55:25.154728 => 2023-02-08 12:55:25.343638
+[0m12:55:25.344090 [debug] [Thread-3  ]: Began executing node model.test_dbt.metric_test
+[0m12:55:25.348937 [debug] [Thread-3  ]: Writing runtime sql for node "model.test_dbt.metric_test"
+[0m12:55:25.349482 [debug] [Thread-3  ]: Using postgres connection "model.test_dbt.metric_test"
+[0m12:55:25.349674 [debug] [Thread-3  ]: On model.test_dbt.metric_test: BEGIN
+[0m12:55:25.349847 [debug] [Thread-3  ]: Opening a new connection, currently in state init
+[0m12:55:25.369931 [debug] [Thread-3  ]: SQL status: BEGIN in 0 seconds
+[0m12:55:25.370228 [debug] [Thread-3  ]: Using postgres connection "model.test_dbt.metric_test"
+[0m12:55:25.370448 [debug] [Thread-3  ]: On model.test_dbt.metric_test: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "node_id": "model.test_dbt.metric_test"} */
+
+  create view "test_dbt"."public"."metric_test__dbt_tmp" as (
+    select *,
+
+    now() + ((interval '1 ') * (1))
+
+
+from -- depends on: "test_dbt"."public"."dbt_metrics_default_calendar"
+
+(
+
+with calendar as (
+    select 
+        * 
+    from "test_dbt"."public"."dbt_metrics_default_calendar"
+     
+)
+
+, model_51758de9e889a72967b82e35fea7902f__aggregate as (
+    
+    select
+        date_week,
+        name,
+        bool_or(metric_date_day is not null) as has_data,
+        sum(property_to_aggregate__rolling_new_customers) as rolling_new_customers,
+        sum(property_to_aggregate__test_update) as test_update
+    from (
+        select 
+            cast(base_model.date_id as date) as metric_date_day,
+            calendar.date_week as date_week,
+            calendar.date_day as window_filter_date,
+            base_model.name,
+            (score) as property_to_aggregate__rolling_new_customers,
+            (score) as property_to_aggregate__test_update
+        from "test_dbt"."public"."my_first_dbt_model" base_model 
+        
+        left join calendar
+            on cast(base_model.date_id as date) = calendar.date_day
+        
+        where 1=1
+        
+    ) as base_query
+
+    where 1=1
+    group by 1, 2
+
+), model_51758de9e889a72967b82e35fea7902f__final as (
+    
+    select
+        parent_metric_cte.date_week,
+        parent_metric_cte.name,
+        coalesce(rolling_new_customers, 0) as rolling_new_customers,
+        coalesce(test_update, 0) as test_update
+    from model_51758de9e889a72967b82e35fea7902f__aggregate as parent_metric_cte
+)
+
+select
+    date_week ,
+    name,
+    rolling_new_customers,
+    test_update  
+    
+from model_51758de9e889a72967b82e35fea7902f__final
+    
+order by 1 desc
+    
+) metric_subq
+  );
+[0m12:55:25.390245 [debug] [Thread-3  ]: SQL status: CREATE VIEW in 0 seconds
+[0m12:55:25.393538 [debug] [Thread-3  ]: Using postgres connection "model.test_dbt.metric_test"
+[0m12:55:25.393835 [debug] [Thread-3  ]: On model.test_dbt.metric_test: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "node_id": "model.test_dbt.metric_test"} */
+alter table "test_dbt"."public"."metric_test__dbt_tmp" rename to "metric_test"
+[0m12:55:25.395662 [debug] [Thread-3  ]: SQL status: ALTER TABLE in 0 seconds
+[0m12:55:25.397407 [debug] [Thread-3  ]: On model.test_dbt.metric_test: COMMIT
+[0m12:55:25.397612 [debug] [Thread-3  ]: Using postgres connection "model.test_dbt.metric_test"
+[0m12:55:25.397794 [debug] [Thread-3  ]: On model.test_dbt.metric_test: COMMIT
+[0m12:55:25.401398 [debug] [Thread-3  ]: SQL status: COMMIT in 0 seconds
+[0m12:55:25.403935 [debug] [Thread-3  ]: Using postgres connection "model.test_dbt.metric_test"
+[0m12:55:25.404145 [debug] [Thread-3  ]: On model.test_dbt.metric_test: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "node_id": "model.test_dbt.metric_test"} */
+drop view if exists "test_dbt"."public"."metric_test__dbt_backup" cascade
+[0m12:55:25.405590 [debug] [Thread-3  ]: SQL status: DROP VIEW in 0 seconds
+[0m12:55:25.406831 [debug] [Thread-3  ]: Timing info for model.test_dbt.metric_test (execute): 2023-02-08 12:55:25.344244 => 2023-02-08 12:55:25.406785
+[0m12:55:25.407052 [debug] [Thread-3  ]: On model.test_dbt.metric_test: Close
+[0m12:55:25.407703 [debug] [Thread-3  ]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '378cdb66-db03-44fb-82a0-1523bf630edd', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1098030a0>]}
+[0m12:55:25.408135 [info ] [Thread-3  ]: 4 of 4 OK created sql view model public.metric_test ............................ [[32mCREATE VIEW[0m in 0.25s]
+[0m12:55:25.408481 [debug] [Thread-3  ]: Finished running node model.test_dbt.metric_test
+[0m12:55:25.409827 [debug] [MainThread]: Acquiring new postgres connection 'master'
+[0m12:55:25.410152 [debug] [MainThread]: Using postgres connection "master"
+[0m12:55:25.410456 [debug] [MainThread]: On master: BEGIN
+[0m12:55:25.410691 [debug] [MainThread]: Opening a new connection, currently in state closed
+[0m12:55:25.431643 [debug] [MainThread]: SQL status: BEGIN in 0 seconds
+[0m12:55:25.432032 [debug] [MainThread]: On master: COMMIT
+[0m12:55:25.432282 [debug] [MainThread]: Using postgres connection "master"
+[0m12:55:25.432510 [debug] [MainThread]: On master: COMMIT
+[0m12:55:25.434323 [debug] [MainThread]: SQL status: COMMIT in 0 seconds
+[0m12:55:25.434676 [debug] [MainThread]: On master: Close
+[0m12:55:25.435242 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m12:55:25.435461 [debug] [MainThread]: Connection 'model.metrics.dbt_metrics_default_calendar' was properly closed.
+[0m12:55:25.435648 [debug] [MainThread]: Connection 'model.test_dbt.my_first_dbt_model' was properly closed.
+[0m12:55:25.435827 [debug] [MainThread]: Connection 'model.test_dbt.my_second_dbt_model' was properly closed.
+[0m12:55:25.436003 [debug] [MainThread]: Connection 'model.test_dbt.metric_test' was properly closed.
+[0m12:55:25.436279 [info ] [MainThread]: 
+[0m12:55:25.436568 [info ] [MainThread]: Finished running 2 table models, 2 view models in 0 hours 0 minutes and 1.03 seconds (1.03s).
+[0m12:55:25.437054 [debug] [MainThread]: Command end result
+[0m12:55:25.447618 [info ] [MainThread]: 
+[0m12:55:25.448038 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m12:55:25.448329 [info ] [MainThread]: 
+[0m12:55:25.448611 [info ] [MainThread]: Done. PASS=4 WARN=0 ERROR=0 SKIP=0 TOTAL=4
+[0m12:55:25.448963 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x108fef6d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x109648b50>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x109648be0>]}
+[0m12:55:25.449264 [debug] [MainThread]: Flushing usage events
+
+
+============================== 2023-02-12 13:38:39.891354 | 6b8fa451-19b6-4365-bf0b-0401bd4e9a43 ==============================
+[0m13:38:39.891354 [info ] [MainThread]: Running with dbt=1.4.1
+[0m13:38:39.894438 [debug] [MainThread]: running dbt with arguments {'write_json': True, 'use_colors': True, 'printer_width': 80, 'version_check': True, 'partial_parse': True, 'static_parser': True, 'profiles_dir': '/Users/afinkelstein/.dbt', 'send_anonymous_usage_stats': True, 'quiet': False, 'no_print': False, 'cache_selected_only': False, 'compile': True, 'which': 'generate', 'rpc_method': 'docs.generate', 'indirect_selection': 'eager'}
+[0m13:38:39.894699 [debug] [MainThread]: Tracking: tracking
+[0m13:38:39.917397 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10623dbb0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x108122760>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x108122130>]}
+[0m13:38:40.124545 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 1 files changed.
+[0m13:38:40.125110 [debug] [MainThread]: Partial parsing: updated file: test_dbt://models/example/metrics.yml
+[0m13:38:40.138375 [debug] [MainThread]: 1603: static parser failed on example/metric_test.sql
+[0m13:38:40.194071 [debug] [MainThread]: 1602: parser fallback to jinja rendering on example/metric_test.sql
+[0m13:38:40.222427 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '6b8fa451-19b6-4365-bf0b-0401bd4e9a43', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1084c6e80>]}
+[0m13:38:40.233067 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '6b8fa451-19b6-4365-bf0b-0401bd4e9a43', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x108113df0>]}
+[0m13:38:40.233408 [info ] [MainThread]: Found 4 models, 4 tests, 0 snapshots, 0 analyses, 515 macros, 0 operations, 0 seed files, 0 sources, 0 exposures, 3 metrics
+[0m13:38:40.233666 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '6b8fa451-19b6-4365-bf0b-0401bd4e9a43', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x108118070>]}
+[0m13:38:40.235060 [info ] [MainThread]: 
+[0m13:38:40.236619 [debug] [MainThread]: Acquiring new postgres connection 'master'
+[0m13:38:40.237447 [debug] [ThreadPool]: Acquiring new postgres connection 'list_test_dbt_public'
+[0m13:38:40.247449 [debug] [ThreadPool]: Using postgres connection "list_test_dbt_public"
+[0m13:38:40.247673 [debug] [ThreadPool]: On list_test_dbt_public: BEGIN
+[0m13:38:40.247869 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m13:38:40.427975 [debug] [ThreadPool]: SQL status: BEGIN in 0 seconds
+[0m13:38:40.428283 [debug] [ThreadPool]: Using postgres connection "list_test_dbt_public"
+[0m13:38:40.428491 [debug] [ThreadPool]: On list_test_dbt_public: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "connection_name": "list_test_dbt_public"} */
+select
+      'test_dbt' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'public'
+    union all
+    select
+      'test_dbt' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'public'
+  
+[0m13:38:40.549122 [debug] [ThreadPool]: SQL status: SELECT 4 in 0 seconds
+[0m13:38:40.550722 [debug] [ThreadPool]: On list_test_dbt_public: ROLLBACK
+[0m13:38:40.551799 [debug] [ThreadPool]: On list_test_dbt_public: Close
+[0m13:38:40.558210 [debug] [MainThread]: Using postgres connection "master"
+[0m13:38:40.558547 [debug] [MainThread]: On master: BEGIN
+[0m13:38:40.558816 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m13:38:40.592312 [debug] [MainThread]: SQL status: BEGIN in 0 seconds
+[0m13:38:40.592619 [debug] [MainThread]: Using postgres connection "master"
+[0m13:38:40.592834 [debug] [MainThread]: On master: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "connection_name": "master"} */
+with relation as (
+        select
+            pg_rewrite.ev_class as class,
+            pg_rewrite.oid as id
+        from pg_rewrite
+    ),
+    class as (
+        select
+            oid as id,
+            relname as name,
+            relnamespace as schema,
+            relkind as kind
+        from pg_class
+    ),
+    dependency as (
+        select distinct
+            pg_depend.objid as id,
+            pg_depend.refobjid as ref
+        from pg_depend
+    ),
+    schema as (
+        select
+            pg_namespace.oid as id,
+            pg_namespace.nspname as name
+        from pg_namespace
+        where nspname != 'information_schema' and nspname not like 'pg\_%'
+    ),
+    referenced as (
+        select
+            relation.id AS id,
+            referenced_class.name ,
+            referenced_class.schema ,
+            referenced_class.kind
+        from relation
+        join class as referenced_class on relation.class=referenced_class.id
+        where referenced_class.kind in ('r', 'v')
+    ),
+    relationships as (
+        select
+            referenced.name as referenced_name,
+            referenced.schema as referenced_schema_id,
+            dependent_class.name as dependent_name,
+            dependent_class.schema as dependent_schema_id,
+            referenced.kind as kind
+        from referenced
+        join dependency on referenced.id=dependency.id
+        join class as dependent_class on dependency.ref=dependent_class.id
+        where
+            (referenced.name != dependent_class.name or
+             referenced.schema != dependent_class.schema)
+    )
+
+    select
+        referenced_schema.name as referenced_schema,
+        relationships.referenced_name as referenced_name,
+        dependent_schema.name as dependent_schema,
+        relationships.dependent_name as dependent_name
+    from relationships
+    join schema as dependent_schema on relationships.dependent_schema_id=dependent_schema.id
+    join schema as referenced_schema on relationships.referenced_schema_id=referenced_schema.id
+    group by referenced_schema, referenced_name, dependent_schema, dependent_name
+    order by referenced_schema, referenced_name, dependent_schema, dependent_name;
+[0m13:38:40.660634 [debug] [MainThread]: SQL status: SELECT 3 in 0 seconds
+[0m13:38:40.662134 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '6b8fa451-19b6-4365-bf0b-0401bd4e9a43', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x108511e80>]}
+[0m13:38:40.662493 [debug] [MainThread]: On master: ROLLBACK
+[0m13:38:40.664261 [debug] [MainThread]: On master: Close
+[0m13:38:40.665021 [info ] [MainThread]: Concurrency: 5 threads (target='dev')
+[0m13:38:40.665351 [info ] [MainThread]: 
+[0m13:38:40.670495 [debug] [Thread-1  ]: Began running node model.metrics.dbt_metrics_default_calendar
+[0m13:38:40.670928 [debug] [Thread-2  ]: Began running node model.test_dbt.my_first_dbt_model
+[0m13:38:40.671904 [debug] [Thread-1  ]: Acquiring new postgres connection 'model.metrics.dbt_metrics_default_calendar'
+[0m13:38:40.672541 [debug] [Thread-2  ]: Acquiring new postgres connection 'model.test_dbt.my_first_dbt_model'
+[0m13:38:40.672818 [debug] [Thread-1  ]: Began compiling node model.metrics.dbt_metrics_default_calendar
+[0m13:38:40.673079 [debug] [Thread-2  ]: Began compiling node model.test_dbt.my_first_dbt_model
+[0m13:38:40.704636 [debug] [Thread-2  ]: Writing injected SQL for node "model.test_dbt.my_first_dbt_model"
+[0m13:38:40.707532 [debug] [Thread-1  ]: Using postgres connection "model.metrics.dbt_metrics_default_calendar"
+[0m13:38:40.707905 [debug] [Thread-1  ]: On model.metrics.dbt_metrics_default_calendar: BEGIN
+[0m13:38:40.708169 [debug] [Thread-1  ]: Opening a new connection, currently in state closed
+[0m13:38:40.708408 [debug] [Thread-2  ]: Timing info for model.test_dbt.my_first_dbt_model (compile): 2023-02-12 13:38:40.699545 => 2023-02-12 13:38:40.708328
+[0m13:38:40.708908 [debug] [Thread-2  ]: Began executing node model.test_dbt.my_first_dbt_model
+[0m13:38:40.709241 [debug] [Thread-2  ]: Timing info for model.test_dbt.my_first_dbt_model (execute): 2023-02-12 13:38:40.709169 => 2023-02-12 13:38:40.709192
+[0m13:38:40.711219 [debug] [Thread-2  ]: Finished running node model.test_dbt.my_first_dbt_model
+[0m13:38:40.711975 [debug] [Thread-4  ]: Began running node model.test_dbt.my_second_dbt_model
+[0m13:38:40.712268 [debug] [Thread-5  ]: Began running node test.test_dbt.not_null_my_first_dbt_model_id.5fb22c2710
+[0m13:38:40.712515 [debug] [Thread-3  ]: Began running node test.test_dbt.unique_my_first_dbt_model_id.16e066b321
+[0m13:38:40.713102 [debug] [Thread-4  ]: Acquiring new postgres connection 'model.test_dbt.my_second_dbt_model'
+[0m13:38:40.713774 [debug] [Thread-5  ]: Acquiring new postgres connection 'test.test_dbt.not_null_my_first_dbt_model_id.5fb22c2710'
+[0m13:38:40.714414 [debug] [Thread-3  ]: Acquiring new postgres connection 'test.test_dbt.unique_my_first_dbt_model_id.16e066b321'
+[0m13:38:40.714708 [debug] [Thread-4  ]: Began compiling node model.test_dbt.my_second_dbt_model
+[0m13:38:40.714967 [debug] [Thread-5  ]: Began compiling node test.test_dbt.not_null_my_first_dbt_model_id.5fb22c2710
+[0m13:38:40.715282 [debug] [Thread-3  ]: Began compiling node test.test_dbt.unique_my_first_dbt_model_id.16e066b321
+[0m13:38:40.718998 [debug] [Thread-4  ]: Writing injected SQL for node "model.test_dbt.my_second_dbt_model"
+[0m13:38:40.736249 [debug] [Thread-5  ]: Writing injected SQL for node "test.test_dbt.not_null_my_first_dbt_model_id.5fb22c2710"
+[0m13:38:40.736543 [debug] [Thread-1  ]: SQL status: BEGIN in 0 seconds
+[0m13:38:40.744257 [debug] [Thread-3  ]: Writing injected SQL for node "test.test_dbt.unique_my_first_dbt_model_id.16e066b321"
+[0m13:38:40.744773 [debug] [Thread-1  ]: Using postgres connection "model.metrics.dbt_metrics_default_calendar"
+[0m13:38:40.745091 [debug] [Thread-1  ]: On model.metrics.dbt_metrics_default_calendar: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "node_id": "model.metrics.dbt_metrics_default_calendar"} */
+
+
+        select 
+        ((cast('2030-01-01' as date))::date - (cast('1990-01-01' as date))::date)
+    
+[0m13:38:40.745588 [debug] [Thread-5  ]: Timing info for test.test_dbt.not_null_my_first_dbt_model_id.5fb22c2710 (compile): 2023-02-12 13:38:40.719386 => 2023-02-12 13:38:40.745524
+[0m13:38:40.745801 [debug] [Thread-3  ]: Timing info for test.test_dbt.unique_my_first_dbt_model_id.16e066b321 (compile): 2023-02-12 13:38:40.736712 => 2023-02-12 13:38:40.745757
+[0m13:38:40.745986 [debug] [Thread-4  ]: Timing info for model.test_dbt.my_second_dbt_model (compile): 2023-02-12 13:38:40.715525 => 2023-02-12 13:38:40.745933
+[0m13:38:40.746236 [debug] [Thread-5  ]: Began executing node test.test_dbt.not_null_my_first_dbt_model_id.5fb22c2710
+[0m13:38:40.746509 [debug] [Thread-3  ]: Began executing node test.test_dbt.unique_my_first_dbt_model_id.16e066b321
+[0m13:38:40.746785 [debug] [Thread-4  ]: Began executing node model.test_dbt.my_second_dbt_model
+[0m13:38:40.747057 [debug] [Thread-5  ]: Timing info for test.test_dbt.not_null_my_first_dbt_model_id.5fb22c2710 (execute): 2023-02-12 13:38:40.746996 => 2023-02-12 13:38:40.747009
+[0m13:38:40.747322 [debug] [Thread-3  ]: Timing info for test.test_dbt.unique_my_first_dbt_model_id.16e066b321 (execute): 2023-02-12 13:38:40.747266 => 2023-02-12 13:38:40.747275
+[0m13:38:40.747602 [debug] [Thread-4  ]: Timing info for model.test_dbt.my_second_dbt_model (execute): 2023-02-12 13:38:40.747546 => 2023-02-12 13:38:40.747555
+[0m13:38:40.748281 [debug] [Thread-5  ]: Finished running node test.test_dbt.not_null_my_first_dbt_model_id.5fb22c2710
+[0m13:38:40.748908 [debug] [Thread-3  ]: Finished running node test.test_dbt.unique_my_first_dbt_model_id.16e066b321
+[0m13:38:40.749579 [debug] [Thread-4  ]: Finished running node model.test_dbt.my_second_dbt_model
+[0m13:38:40.750503 [debug] [Thread-2  ]: Began running node test.test_dbt.not_null_my_second_dbt_model_id.151b76d778
+[0m13:38:40.750764 [debug] [Thread-5  ]: Began running node test.test_dbt.unique_my_second_dbt_model_id.57a0f8c493
+[0m13:38:40.751294 [debug] [Thread-2  ]: Acquiring new postgres connection 'test.test_dbt.not_null_my_second_dbt_model_id.151b76d778'
+[0m13:38:40.751846 [debug] [Thread-5  ]: Acquiring new postgres connection 'test.test_dbt.unique_my_second_dbt_model_id.57a0f8c493'
+[0m13:38:40.752135 [debug] [Thread-2  ]: Began compiling node test.test_dbt.not_null_my_second_dbt_model_id.151b76d778
+[0m13:38:40.752435 [debug] [Thread-5  ]: Began compiling node test.test_dbt.unique_my_second_dbt_model_id.57a0f8c493
+[0m13:38:40.757283 [debug] [Thread-2  ]: Writing injected SQL for node "test.test_dbt.not_null_my_second_dbt_model_id.151b76d778"
+[0m13:38:40.757509 [debug] [Thread-1  ]: SQL status: SELECT 1 in 0 seconds
+[0m13:38:40.761640 [debug] [Thread-5  ]: Writing injected SQL for node "test.test_dbt.unique_my_second_dbt_model_id.57a0f8c493"
+[0m13:38:40.775396 [debug] [Thread-1  ]: Writing injected SQL for node "model.metrics.dbt_metrics_default_calendar"
+[0m13:38:40.775672 [debug] [Thread-2  ]: Timing info for test.test_dbt.not_null_my_second_dbt_model_id.151b76d778 (compile): 2023-02-12 13:38:40.752688 => 2023-02-12 13:38:40.775611
+[0m13:38:40.776258 [debug] [Thread-2  ]: Began executing node test.test_dbt.not_null_my_second_dbt_model_id.151b76d778
+[0m13:38:40.776481 [debug] [Thread-2  ]: Timing info for test.test_dbt.not_null_my_second_dbt_model_id.151b76d778 (execute): 2023-02-12 13:38:40.776433 => 2023-02-12 13:38:40.776443
+[0m13:38:40.777069 [debug] [Thread-2  ]: Finished running node test.test_dbt.not_null_my_second_dbt_model_id.151b76d778
+[0m13:38:40.777515 [debug] [Thread-5  ]: Timing info for test.test_dbt.unique_my_second_dbt_model_id.57a0f8c493 (compile): 2023-02-12 13:38:40.757726 => 2023-02-12 13:38:40.777458
+[0m13:38:40.778090 [debug] [Thread-5  ]: Began executing node test.test_dbt.unique_my_second_dbt_model_id.57a0f8c493
+[0m13:38:40.778379 [debug] [Thread-1  ]: Timing info for model.metrics.dbt_metrics_default_calendar (compile): 2023-02-12 13:38:40.673278 => 2023-02-12 13:38:40.778333
+[0m13:38:40.778582 [debug] [Thread-5  ]: Timing info for test.test_dbt.unique_my_second_dbt_model_id.57a0f8c493 (execute): 2023-02-12 13:38:40.778539 => 2023-02-12 13:38:40.778546
+[0m13:38:40.778803 [debug] [Thread-1  ]: Began executing node model.metrics.dbt_metrics_default_calendar
+[0m13:38:40.779324 [debug] [Thread-5  ]: Finished running node test.test_dbt.unique_my_second_dbt_model_id.57a0f8c493
+[0m13:38:40.779532 [debug] [Thread-1  ]: Timing info for model.metrics.dbt_metrics_default_calendar (execute): 2023-02-12 13:38:40.779491 => 2023-02-12 13:38:40.779496
+[0m13:38:40.779870 [debug] [Thread-1  ]: On model.metrics.dbt_metrics_default_calendar: ROLLBACK
+[0m13:38:40.781899 [debug] [Thread-1  ]: On model.metrics.dbt_metrics_default_calendar: Close
+[0m13:38:40.782674 [debug] [Thread-1  ]: Finished running node model.metrics.dbt_metrics_default_calendar
+[0m13:38:40.783450 [debug] [Thread-4  ]: Began running node model.test_dbt.metric_test
+[0m13:38:40.784080 [debug] [Thread-4  ]: Acquiring new postgres connection 'model.test_dbt.metric_test'
+[0m13:38:40.784297 [debug] [Thread-4  ]: Began compiling node model.test_dbt.metric_test
+[0m13:38:40.957641 [debug] [Thread-4  ]: Writing injected SQL for node "model.test_dbt.metric_test"
+[0m13:38:40.958995 [debug] [Thread-4  ]: Timing info for model.test_dbt.metric_test (compile): 2023-02-12 13:38:40.784450 => 2023-02-12 13:38:40.958932
+[0m13:38:40.959229 [debug] [Thread-4  ]: Began executing node model.test_dbt.metric_test
+[0m13:38:40.959424 [debug] [Thread-4  ]: Timing info for model.test_dbt.metric_test (execute): 2023-02-12 13:38:40.959379 => 2023-02-12 13:38:40.959389
+[0m13:38:40.960144 [debug] [Thread-4  ]: Finished running node model.test_dbt.metric_test
+[0m13:38:40.961843 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m13:38:40.962030 [debug] [MainThread]: Connection 'model.metrics.dbt_metrics_default_calendar' was properly closed.
+[0m13:38:40.962185 [debug] [MainThread]: Connection 'test.test_dbt.not_null_my_second_dbt_model_id.151b76d778' was properly closed.
+[0m13:38:40.962419 [debug] [MainThread]: Connection 'model.test_dbt.metric_test' was properly closed.
+[0m13:38:40.962566 [debug] [MainThread]: Connection 'test.test_dbt.unique_my_second_dbt_model_id.57a0f8c493' was properly closed.
+[0m13:38:40.962711 [debug] [MainThread]: Connection 'test.test_dbt.unique_my_first_dbt_model_id.16e066b321' was properly closed.
+[0m13:38:40.963351 [debug] [MainThread]: Command end result
+[0m13:38:40.974495 [info ] [MainThread]: Done.
+[0m13:38:40.978697 [debug] [MainThread]: Acquiring new postgres connection 'generate_catalog'
+[0m13:38:40.978903 [info ] [MainThread]: Building catalog
+[0m13:38:40.980276 [debug] [ThreadPool]: Acquiring new postgres connection 'test_dbt.information_schema'
+[0m13:38:40.987014 [debug] [ThreadPool]: Using postgres connection "test_dbt.information_schema"
+[0m13:38:40.987255 [debug] [ThreadPool]: On test_dbt.information_schema: BEGIN
+[0m13:38:40.987477 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m13:38:41.000975 [debug] [ThreadPool]: SQL status: BEGIN in 0 seconds
+[0m13:38:41.001331 [debug] [ThreadPool]: Using postgres connection "test_dbt.information_schema"
+[0m13:38:41.001568 [debug] [ThreadPool]: On test_dbt.information_schema: /* {"app": "dbt", "dbt_version": "1.4.1", "profile_name": "test_dbt", "target_name": "dev", "connection_name": "test_dbt.information_schema"} */
+
+    
+    
+
+    select
+        'test_dbt' as table_database,
+        sch.nspname as table_schema,
+        tbl.relname as table_name,
+        case tbl.relkind
+            when 'v' then 'VIEW'
+            else 'BASE TABLE'
+        end as table_type,
+        tbl_desc.description as table_comment,
+        col.attname as column_name,
+        col.attnum as column_index,
+        pg_catalog.format_type(col.atttypid, col.atttypmod) as column_type,
+        col_desc.description as column_comment,
+        pg_get_userbyid(tbl.relowner) as table_owner
+
+    from pg_catalog.pg_namespace sch
+    join pg_catalog.pg_class tbl on tbl.relnamespace = sch.oid
+    join pg_catalog.pg_attribute col on col.attrelid = tbl.oid
+    left outer join pg_catalog.pg_description tbl_desc on (tbl_desc.objoid = tbl.oid and tbl_desc.objsubid = 0)
+    left outer join pg_catalog.pg_description col_desc on (col_desc.objoid = tbl.oid and col_desc.objsubid = col.attnum)
+
+    where (upper(sch.nspname) = upper('public'))
+      and not pg_is_other_temp_schema(sch.oid) -- not a temporary schema belonging to another session
+      and tbl.relpersistence in ('p', 'u') -- [p]ermanent table or [u]nlogged table. Exclude [t]emporary tables
+      and tbl.relkind in ('r', 'v', 'f', 'p') -- o[r]dinary table, [v]iew, [f]oreign table, [p]artitioned table. Other values are [i]ndex, [S]equence, [c]omposite type, [t]OAST table, [m]aterialized view
+      and col.attnum > 0 -- negative numbers are used for system columns such as oid
+      and not col.attisdropped -- column as not been dropped
+
+    order by
+        sch.nspname,
+        tbl.relname,
+        col.attnum
+[0m13:38:41.064243 [debug] [ThreadPool]: SQL status: SELECT 18 in 0 seconds
+[0m13:38:41.070848 [debug] [ThreadPool]: On test_dbt.information_schema: ROLLBACK
+[0m13:38:41.072358 [debug] [ThreadPool]: On test_dbt.information_schema: Close
+[0m13:38:41.085623 [info ] [MainThread]: Catalog written to /Users/afinkelstein/work/test_dbt/target/catalog.json
+[0m13:38:41.086223 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10623dbb0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1086f06d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1086f05b0>]}
+[0m13:38:41.086527 [debug] [MainThread]: Flushing usage events
+[0m13:38:41.944993 [debug] [MainThread]: Connection 'generate_catalog' was properly closed.
+[0m13:38:41.945506 [debug] [MainThread]: Connection 'test_dbt.information_schema' was properly closed.
+
+
+============================== 2023-02-12 13:38:50.901241 | 67e1a652-d4ed-470b-a039-c3365bc77c0e ==============================
+[0m13:38:50.901241 [info ] [MainThread]: Running with dbt=1.4.1
+[0m13:38:50.903586 [debug] [MainThread]: running dbt with arguments {'write_json': True, 'use_colors': True, 'printer_width': 80, 'version_check': True, 'partial_parse': True, 'static_parser': True, 'profiles_dir': '/Users/afinkelstein/.dbt', 'send_anonymous_usage_stats': True, 'quiet': False, 'no_print': False, 'cache_selected_only': False, 'port': 8080, 'open_browser': True, 'which': 'serve', 'indirect_selection': 'eager'}
+[0m13:38:50.903869 [debug] [MainThread]: Tracking: tracking
+[0m13:38:50.922261 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10d3f3250>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10d3fd130>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10d3fd040>]}
+[0m13:38:50.925055 [info ] [MainThread]: Serving docs at 0.0.0.0:8080
+[0m13:38:50.925400 [info ] [MainThread]: To access from your browser, navigate to:  http://localhost:8080
+[0m13:38:50.925668 [info ] [MainThread]: 
+[0m13:38:50.925926 [info ] [MainThread]: 
+[0m13:38:50.926170 [info ] [MainThread]: Press Ctrl+C to exit.
+[0m15:23:48.753961 [debug] [MainThread]: Flushing usage events
+[0m15:23:48.942850 [info ] [MainThread]: ctrl-c
+
+
+============================== 2023-02-12 15:26:14.263555 | b895f198-f5b5-4696-a750-bf5b42ba8073 ==============================
+[0m15:26:14.263555 [info ] [MainThread]: Running with dbt=1.4.1
+[0m15:26:14.266962 [debug] [MainThread]: running dbt with arguments {'write_json': True, 'use_colors': True, 'printer_width': 80, 'version_check': True, 'partial_parse': True, 'static_parser': True, 'profiles_dir': '/Users/afinkelstein/.dbt', 'send_anonymous_usage_stats': True, 'quiet': False, 'no_print': False, 'cache_selected_only': False, 'parse_only': False, 'which': 'compile', 'rpc_method': 'compile', 'indirect_selection': 'eager'}
+[0m15:26:14.267316 [debug] [MainThread]: Tracking: tracking
+[0m15:26:14.286671 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10c95cca0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10c951d00>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10c951160>]}
+[0m15:26:14.484428 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 1 files changed.
+[0m15:26:14.485282 [debug] [MainThread]: Partial parsing: updated file: test_dbt://models/example/metrics.yml
+[0m15:26:14.493179 [warn ] [MainThread]: [[33mWARNING[0m]: Deprecated functionality
+
+dbt-core v1.3 renamed attributes for metrics:
+  'sql'              -> 'expression'
+  'type'             -> 'calculation_method'
+  'type: expression' -> 'calculation_method: derived'
+Please remove them from the metric definition of metric 'test_window_metric'
+Relevant issue here: https://github.com/dbt-labs/dbt-core/issues/5849
+[0m15:26:14.493558 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'deprecation', 'label': 'b895f198-f5b5-4696-a750-bf5b42ba8073', 'property_': 'warn', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10ceba2b0>]}
+[0m15:26:14.496222 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10cdbd4c0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10ceace80>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10ceb38e0>]}
+[0m15:26:14.496462 [debug] [MainThread]: Flushing usage events
+[0m15:26:16.009143 [error] [MainThread]: Encountered an error:
+Parsing Error
+  Invalid metrics config given in FilePath(searched_path='models', relative_path='example/metrics.yml', modification_time=1675597666.0024235, project_root='/Users/afinkelstein/work/test_dbt') @ metrics: {'name': 'test_window_metric', 'description': 'Rolling average of order amounts over a 7-day period', 'value': 'score', 'rolling_window': {'size': 7, 'offset': '1 day', 'field': 'date_id', 'timeframes': ['7 days']}, 'expression': "select\n  date_id,\n  avg(score) over (\n    order by order_date\n    rows between 6 preceding and current row\n  ) as rolling_average\nfrom {{ ref('my_first_dbt_model') }}", 'calculation_method': 'sum'} - at path []: 'label' is a required property
+
+
+============================== 2023-02-12 15:27:09.644512 | f2e3eb84-0022-4f14-9826-3e2575317d21 ==============================
+[0m15:27:09.644512 [info ] [MainThread]: Running with dbt=1.4.1
+[0m15:27:09.646678 [debug] [MainThread]: running dbt with arguments {'write_json': True, 'use_colors': True, 'printer_width': 80, 'version_check': True, 'partial_parse': True, 'static_parser': True, 'profiles_dir': '/Users/afinkelstein/.dbt', 'send_anonymous_usage_stats': True, 'quiet': False, 'no_print': False, 'cache_selected_only': False, 'parse_only': False, 'which': 'compile', 'rpc_method': 'compile', 'indirect_selection': 'eager'}
+[0m15:27:09.647073 [debug] [MainThread]: Tracking: tracking
+[0m15:27:09.667840 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10e0fcca0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10e0f1400>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10e0f1040>]}
+[0m15:27:09.835555 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 1 files changed.
+[0m15:27:09.836047 [debug] [MainThread]: Partial parsing: updated file: test_dbt://models/example/metrics.yml
+[0m15:27:09.843788 [warn ] [MainThread]: [[33mWARNING[0m]: Deprecated functionality
+
+dbt-core v1.3 renamed attributes for metrics:
+  'sql'              -> 'expression'
+  'type'             -> 'calculation_method'
+  'type: expression' -> 'calculation_method: derived'
+Please remove them from the metric definition of metric 'test_window_metric'
+Relevant issue here: https://github.com/dbt-labs/dbt-core/issues/5849
+[0m15:27:09.844070 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'deprecation', 'label': 'f2e3eb84-0022-4f14-9826-3e2575317d21', 'property_': 'warn', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10e653040>]}
+[0m15:27:09.846753 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10e55d460>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10e64cf70>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10e6534f0>]}
+[0m15:27:09.846999 [debug] [MainThread]: Flushing usage events
+[0m15:27:11.037999 [error] [MainThread]: Encountered an error:
+Parsing Error
+  Invalid metrics config given in FilePath(searched_path='models', relative_path='example/metrics.yml', modification_time=1675597666.0024235, project_root='/Users/afinkelstein/work/test_dbt') @ metrics: {'name': 'test_window_metric', 'description': 'Rolling average of order amounts over a 7-day period', 'value': 'score', 'rolling_window': {'size': 7, 'offset': '1 day', 'field': 'date_id', 'timeframes': ['7 days']}, 'label': 'test_label', 'expression': "select\n  date_id,\n  avg(score) over (\n    order by order_date\n    rows between 6 preceding and current row\n  ) as rolling_average\nfrom {{ ref('my_first_dbt_model') }}", 'calculation_method': 'sum'} - at path []: Additional properties are not allowed ('rolling_window', 'value' were unexpected)

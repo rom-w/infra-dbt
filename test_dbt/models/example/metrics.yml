@@ -1,0 +1,80 @@
+version: 2
+
+metrics:
+  - name: rolling_new_customers
+    label: New Customers
+    model: ref('my_first_dbt_model')
+    description: "The 14 day rolling count of paying customers using the product"
+
+    calculation_method: sum
+    expression: score
+
+    timestamp: date_id
+    time_grains: [day, week, month, quarter, year]
+
+    dimensions:
+      - name
+
+    # general properties
+    config:
+      enabled: true
+      treat_null_values_as_zero: true
+
+    meta: {team: Finance}
+
+  - name: test_update
+    label: New Customers
+    model: ref('my_first_dbt_model')
+    description: "The 14 day rolling count of paying customers using the product"
+
+    calculation_method: max
+    expression: score
+
+    timestamp: date_id
+    time_grains: [day, week, month, quarter, year]
+
+#    window:
+#      count: 3
+#      period: day
+
+    dimensions:
+      - name
+
+    # general properties
+    config:
+      enabled: true
+      treat_null_values_as_zero: true
+
+    meta: {team: Finance}
+
+  - name: average_revenue_per_customer
+    label: Average Revenue Per Customer
+    description: "The average revenue received per customer"
+
+    calculation_method: derived
+    expression: "{{metric('rolling_new_customers')}} / {{metric('test_update')}}"
+
+    timestamp: date_id
+    time_grains: [day, week, month, quarter, year, all_time]
+    dimensions:
+      - name
+
+#  - name: test_window_metric
+#    description: Rolling average of order amounts over a 7-day period
+#    type: sum
+#    value: score
+#    rolling_window:
+#      size: 7
+#      offset: "1 day"
+#      field: date_id
+#      timeframes:
+#        - "7 days"
+#    label: test_label
+#    sql: >
+#      select
+#        date_id,
+#        avg(score) over (
+#          order by order_date
+#          rows between 6 preceding and current row
+#        ) as rolling_average
+#      from {{ ref('my_first_dbt_model') }}

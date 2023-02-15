@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Thu Feb 02 22:46:34 IST 2023:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0186-13e1-8ecf-0000197ef7a0 
+on database directory /Users/afinkelstein/work/test_dbt/metastore_db with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@67424e82 
+Loaded from file:/usr/local/Cellar/dbt-postgres/1.4.1/libexec/lib/python3.9/site-packages/pyspark/jars/derby-10.14.2.0.jar
+java.vendor=AdoptOpenJDK
+java.runtime.version=11.0.11+9
+user.dir=/Users/afinkelstein/work/test_dbt
+os.name=Mac OS X
+os.arch=x86_64
+os.version=11.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
