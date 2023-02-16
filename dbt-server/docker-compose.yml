@@ -1,0 +1,17 @@
+version: "2"
+
+services:
+  shard0:
+    image: dbt-server
+    ports:
+      - 8580:8585
+
+  shard1:
+    image: dbt-server
+    ports:
+      - 8581:8585
+
+  shard2:
+    image: dbt-server
+    ports:
+      - 8582:8585
