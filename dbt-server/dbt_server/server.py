@@ -63,9 +63,11 @@ def startup_cache_initialize():
     manifest_size = filesystem_service.get_size(manifest_path)
     config = dbt_service.create_dbt_config(source_path, config_args)
 
-    LAST_PARSED.set_last_parsed_manifest(
-        latest_state_id, manifest, manifest_size, config
-    )
+    from state import NO_MULTI_CACHE
+    if NO_MULTI_CACHE:
+        LAST_PARSED.set_last_parsed_manifest(
+            latest_state_id, manifest, manifest_size, config
+        )
 
     logger.info(f"[STARTUP] Cached manifest in memory (state_id={latest_state_id})")
 

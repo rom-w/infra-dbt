@@ -10,6 +10,8 @@ import threading
 
 MANIFEST_LOCK = threading.Lock()
 
+NO_MULTI_CACHE = False
+
 
 @dataclass
 class CachedManifest:
@@ -48,7 +50,11 @@ class CachedManifest:
             self.parser = None
 
 
-LAST_PARSED = CachedManifest()
+if NO_MULTI_CACHE:
+    LAST_PARSED = CachedManifest()
+else:
+    LAST_PARSED = {}
+
 
 
 class StateController(object):
@@ -118,6 +124,7 @@ class StateController(object):
         parsed state_id will be cache hits.
         """
         cached = LAST_PARSED.lookup(state_id)
+        cached = LAST_PARSED.get(state_id, None)
         if cached:
             logger.info(f"Loading manifest from cache ({cached.state_id})")
             return cls.from_cached(cached)
@@ -139,7 +146,13 @@ class StateController(object):
         manifest_size = filesystem_service.get_size(manifest_path)
 
         source_path = filesystem_service.get_root_path(state_id)
-        return cls.from_parts(state_id, manifest, source_path, manifest_size, args)
+        if NO_MULTI_CACHE:
+            return cls.from_parts(state_id, manifest, source_path, manifest_size, args)
+
+        _res_state = cls.from_parts(state_id, manifest, source_path, manifest_size, args)
+
+        LAST_PARSED[state_id] = _res_state
+        return _res_state
 
     @tracer.wrap
     def serialize_manifest(self):
@@ -168,6 +181,7 @@ class StateController(object):
     @tracer.wrap
     def update_cache(self):
         logger.info(f"Updating cache (state_id={self.state_id})")
-        LAST_PARSED.set_last_parsed_manifest(
-            self.state_id, self.manifest, self.manifest_size, self.config
-        )
+        if NO_MULTI_CACHE:
+            LAST_PARSED.set_last_parsed_manifest(
+                self.state_id, self.manifest, self.manifest_size, self.config
+            )
