@@ -14,12 +14,12 @@ SERVER_HOST_PARSE = "http://0.0.0.0:%d/parse"
 SERVER_HOST_COMPILE = "http://0.0.0.0:%d/compile"
 
 
-def call_compile(project_dir, model_version, shards_order):
-    model_id = hashlib.md5(os.path.abspath(project_dir).encode()).hexdigest()
+def call_compile(project_dir, model_version, shards_order, model_id = None):
+    if model_id is None:
+        model_id = hashlib.md5(os.path.abspath(project_dir).encode()).hexdigest()
 
     print("model_id = %s, version = %d" % (model_id, model_version))
 
-    sharding_client.Model
     model = sharding_client.get_or_assign_shards(model_id, shards_order)
     print("identified shards and versions", model)
 
@@ -29,7 +29,7 @@ def call_compile(project_dir, model_version, shards_order):
         if shard.version and shard.version == model_version:
             good_shards_q.put(shard.shard_id)
         else:
-            threading.Thread(target=update_shard, args=(shard.shard_id, shard.order, good_shards_q, model.model_id)).start()
+            threading.Thread(target=update_shard, args=(shard.shard_id, shard.order, good_shards_q, model.model_id, project_dir, model_version)).start()
 
     print("waiting for a ready shard...")
     good_shard_id = good_shards_q.get(block=True, timeout=60)
@@ -53,7 +53,7 @@ def call_compile(project_dir, model_version, shards_order):
     print("sql: ", json.loads(resp.content)['res']['compiled_code'])
 
 
-def update_shard(shard_id, order, q, model_id):
+def update_shard(shard_id, order, q, model_id, project_dir, model_version):
     shard_port = 8580 + shard_id
 
     state = model_utils.get_state(project_dir)

@@ -1,42 +1,49 @@
 import psycopg2
 
-# Connect to the database
-conn = psycopg2.connect(
-    host="localhost",
-    database="testdb",
-    user="postgres",
-    password="Datorama01"
-)
+from psycopg2 import pool
+
+postgreSQL_pool = pool.SimpleConnectionPool(1, 20, user="postgres",
+                                                     password="Datorama01",
+                                                     host="127.0.0.1",
+                                                     port="5432",
+                                                     database="testdb")
 
 
 def get_or_assign_shards(model_id, shards_map):
     model = Model(model_id)
 
-    with conn.cursor() as c:
-        c.execute("select * from sharding where model_id = %s", (model_id,))
-        rows = c.fetchall()
-        if rows:
-            for row in rows:
-                model.add_shard(Shard(row[1], row[2], row[3]))
-            return model
+    with postgreSQL_pool.getconn() as conn:
+        try:
+            with conn.cursor() as c:
+                c.execute("select * from sharding where model_id = %s", (model_id,))
+                rows = c.fetchall()
+                if rows:
+                    for row in rows:
+                        model.add_shard(Shard(row[1], row[2], row[3]))
+                    return model
 
-        for shard_id, shard_order in shards_map.items():
-            c.execute("insert into sharding(model_id,shard_id,shard_primary_order) values(%s,%s,%s)",
-                      (model_id, shard_id, shard_order))
-            model.add_shard(Shard(shard_id, shard_order, None))
-        conn.commit()
+                for shard_id, shard_order in shards_map.items():
+                    c.execute("insert into sharding(model_id,shard_id,shard_primary_order) values(%s,%s,%s)",
+                              (model_id, shard_id, shard_order))
+                    model.add_shard(Shard(shard_id, shard_order, None))
+                conn.commit()
 
-        return model
+                return model
+        finally:
+            postgreSQL_pool.putconn(conn)
 
 
 def update_shard_version(model_id, shard_id, model_version, order):
-    with conn.cursor() as c:
-        c.execute("update sharding "
-                  "set shard_primary_order = %s, model_version = %s "
-                  "where model_id = %s and shard_id = %s"
-                  , (order, model_version, model_id, shard_id))
-        conn.commit()
-
+    with postgreSQL_pool.getconn() as conn:
+        try:
+            with conn.cursor() as c:
+                c.execute("update sharding "
+                          "set shard_primary_order = %s, model_version = %s "
+                          "where model_id = %s and shard_id = %s"
+                          , (order, model_version, model_id, shard_id))
+                conn.commit()
+        finally:
+            postgreSQL_pool.putconn(conn)
 
 class Model:
     shards = []
