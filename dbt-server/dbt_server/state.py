@@ -123,8 +123,10 @@ class StateController(object):
         state_ids which are None (ie. "latest") or exactly matching the latest
         parsed state_id will be cache hits.
         """
-        cached = LAST_PARSED.lookup(state_id)
-        cached = LAST_PARSED.get(state_id, None)
+        if NO_MULTI_CACHE:
+            cached = LAST_PARSED.lookup(state_id)
+        else:
+            cached = LAST_PARSED.get(state_id, None)
         if cached:
             logger.info(f"Loading manifest from cache ({cached.state_id})")
             return cls.from_cached(cached)
