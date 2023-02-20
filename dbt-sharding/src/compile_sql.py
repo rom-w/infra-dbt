@@ -26,6 +26,7 @@ def call_compile(project_dir, model_version, shards_order, model_id=None):
     good_shards_q = queue.Queue()
 
     for shard in model.shards:
+        print(shard, "model_version ", model_version)
         if shard.version and shard.version == model_version:
             good_shards_q.put(shard.shard_id)
         else:
