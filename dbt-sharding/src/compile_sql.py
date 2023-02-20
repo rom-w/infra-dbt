@@ -26,7 +26,7 @@ def call_compile(project_dir, model_version, shards_order, model_id=None):
     good_shards_q = queue.Queue()
 
     for shard in model.shards:
-        if shard.version and shard.version == model_version:
+        if shard.version is not None and int(shard.version) == int(model_version):
             good_shards_q.put(shard.shard_id)
         else:
             threading.Thread(target=update_shard, args=(
