@@ -46,10 +46,9 @@ def update_shard_version(model_id, shard_id, model_version, order):
             postgreSQL_pool.putconn(conn)
 
 class Model:
-    shards = []
-
     def __init__(self, model_id):
         self.model_id = model_id
+        self.shards = []
 
     def __str__(self):
         listToStr = ' '.join(map(str, self.shards))
