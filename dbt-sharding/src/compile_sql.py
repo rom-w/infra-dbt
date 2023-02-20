@@ -14,28 +14,22 @@ SERVER_HOST_PARSE = "http://0.0.0.0:%d/parse"
 SERVER_HOST_COMPILE = "http://0.0.0.0:%d/compile"
 
 
-def call_compile(project_dir, model_version, prim_shard, sec_shard):
+def call_compile(project_dir, model_version, shards_order):
     model_id = hashlib.md5(os.path.abspath(project_dir).encode()).hexdigest()
 
     print("model_id = %s, version = %d" % (model_id, model_version))
 
-    shard1, ver1, shard2, ver2 = sharding_client.get_or_assign_shards(model_id, prim_shard, sec_shard)
-
-    print("identified shards and versions", shard1, ver1, shard2, ver2)
-
-    shard1_good = ver1 and ver1 == model_version
-    shard2_good = ver2 and ver2 == model_version
+    sharding_client.Model
+    model = sharding_client.get_or_assign_shards(model_id, shards_order)
+    print("identified shards and versions", model)
 
     good_shards_q = queue.Queue()
 
-    if shard1_good:
-        good_shards_q.put(shard1)
-    else:
-        threading.Thread(target = update_shard, args = (shard1, True, good_shards_q, model_id)).start()
-    if shard2_good:
-        good_shards_q.put()
-    else:
-        threading.Thread(target = update_shard, args = (shard2, False, good_shards_q, model_id)).start()
+    for shard in model.shards:
+        if shard.version and shard.version == model_version:
+            good_shards_q.put(shard.shard_id)
+        else:
+            threading.Thread(target=update_shard, args=(shard.shard_id, shard.order, good_shards_q, model.model_id)).start()
 
     print("waiting for a ready shard...")
     good_shard_id = good_shards_q.get(block=True, timeout=60)
@@ -59,7 +53,7 @@ def call_compile(project_dir, model_version, prim_shard, sec_shard):
     print("sql: ", json.loads(resp.content)['res']['compiled_code'])
 
 
-def update_shard(shard_id, is_primary, q, model_id):
+def update_shard(shard_id, order, q, model_id):
     shard_port = 8580 + shard_id
 
     state = model_utils.get_state(project_dir)
@@ -70,19 +64,22 @@ def update_shard(shard_id, is_primary, q, model_id):
 
     req = requests.post(SERVER_HOST_PARSE % shard_port, json={"state_id": model_id})
     if req.status_code != 200:
-        print("could not parse shard",shard_id)
+        print("could not parse shard", shard_id)
         return
 
-    sharding_client.update_shard_version(model_id, model_version, is_primary)
+    sharding_client.update_shard_version(model_id, shard_id, model_version, order)
 
     q.put(shard_id)
+
+
+def as_dict(lst):
+    res_dct = {int(lst[i]): int(lst[i + 1]) for i in range(0, len(lst), 2)}
+    return res_dct
 
 
 if __name__ == "__main__":
     project_dir = sys.argv[1]
     model_version = int(sys.argv[2])
+    shards_order = as_dict(sys.argv[3].split(","))
 
-    prim_shard = int(sys.argv[3])
-    sec_shard = int(sys.argv[4])
-
-    call_compile(project_dir, model_version, prim_shard, sec_shard)
+    call_compile(project_dir, model_version, shards_order)
