@@ -6,8 +6,7 @@ import time
 
 # /Users/afinkelstein/work/infra-dbt/test_dbt 0 0 5
 
-model_dir = "/Users/afinkelstein/work/infra-dbt/test_dbt"
-
+project_dir = "/Users/lbuanos/work/infra-dbt/test_dbt"
 
 
 class CompileTask(User):
@@ -24,9 +23,9 @@ class CompileTask(User):
         start_perf_counter = time.perf_counter()
         start_time = time.time()
 
-        model_id = random.randint(0, 10)
+        model_id = str(random.randint(0, 10))
 
-        compile_sql.call_compile(model_dir, model_id, shard, (shard+1) % 3)
+        compile_sql.call_compile(project_dir, 0, [shard, (shard + 1) % 3], model_id)
 
         self.environment.events.request.fire(
             request_type="ENQUEUE",
