@@ -9,7 +9,7 @@ postgreSQL_pool = pool.SimpleConnectionPool(1, 20, user="postgres",
                                                      database="testdb")
 
 
-def get_or_assign_shards(model_id, shards_map):
+def get_or_assign_shards(model_id, shards_order):
     model = Model(model_id)
 
     with postgreSQL_pool.getconn() as conn:
@@ -22,7 +22,7 @@ def get_or_assign_shards(model_id, shards_map):
                         model.add_shard(Shard(row[1], row[2], row[3]))
                     return model
 
-                for shard_id, shard_order in shards_map.items():
+                for shard_order, shard_id in enumerate(shards_order):
                     c.execute("insert into sharding(model_id,shard_id,shard_primary_order) values(%s,%s,%s)",
                               (model_id, shard_id, shard_order))
                     model.add_shard(Shard(shard_id, shard_order, None))

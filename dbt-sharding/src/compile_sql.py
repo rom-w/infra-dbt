@@ -14,7 +14,7 @@ SERVER_HOST_PARSE = "http://0.0.0.0:%d/parse"
 SERVER_HOST_COMPILE = "http://0.0.0.0:%d/compile"
 
 
-def call_compile(project_dir, model_version, shards_order, model_id = None):
+def call_compile(project_dir, model_version, shards_order, model_id=None):
     if model_id is None:
         model_id = hashlib.md5(os.path.abspath(project_dir).encode()).hexdigest()
 
@@ -29,7 +29,8 @@ def call_compile(project_dir, model_version, shards_order, model_id = None):
         if shard.version and shard.version == model_version:
             good_shards_q.put(shard.shard_id)
         else:
-            threading.Thread(target=update_shard, args=(shard.shard_id, shard.order, good_shards_q, model.model_id, project_dir, model_version)).start()
+            threading.Thread(target=update_shard, args=(
+            shard.shard_id, shard.order, good_shards_q, model.model_id, project_dir, model_version)).start()
 
     print("waiting for a ready shard...")
     good_shard_id = good_shards_q.get(block=True, timeout=60)
@@ -72,14 +73,9 @@ def update_shard(shard_id, order, q, model_id, project_dir, model_version):
     q.put(shard_id)
 
 
-def as_dict(lst):
-    res_dct = {int(lst[i]): int(lst[i + 1]) for i in range(0, len(lst), 2)}
-    return res_dct
-
-
 if __name__ == "__main__":
     project_dir = sys.argv[1]
     model_version = int(sys.argv[2])
-    shards_order = as_dict(sys.argv[3].split(","))
+    shards_order = [int(v) for v in sys.argv[3].split(",")]
 
     call_compile(project_dir, model_version, shards_order)
