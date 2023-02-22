@@ -1,6 +1,5 @@
 test_dbt:
   outputs:
-
     dev:
       type: postgres
       threads: 5
@@ -10,34 +9,5 @@ test_dbt:
       pass: Datorama01
       dbname: test_dbt
       schema: public
-
-    prod:
-      type: postgres
-      threads: [1 or more]
-      host: [host]
-      port: [port]
-      user: [prod_username]
-      pass: [prod_password]
-      dbname: [dbname]
-      schema: [prod_schema]
-
-    spark:
-      type: spark
-      method: thrift
-      schema: test
-      host: localhost
-
-      # optional
-      port: 10000             # default 10001
-      # user: [user]
-      # auth: [e.g. KERBEROS]
-      # kerberos_service_name: [e.g. hive]
-      # use_ssl: [true|false]
-
-    sparksession:
-      type: spark
-      method: session
-      schema: testsession
-      host: NA
 
   target: dev

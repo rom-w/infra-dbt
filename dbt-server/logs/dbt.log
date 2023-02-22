@@ -1,0 +1,8 @@
+
+
+============================== 2023-02-21 12:11:50.211200 | 89fd1bfe-caea-4cfb-8f48-7de31fa66255 ==============================
+[0m12:11:50.211200 [info ] [MainThread]: Running with dbt=1.4.1
+[0m12:11:50.211950 [debug] [MainThread]: running dbt with arguments {'write_json': True, 'use_colors': True, 'printer_width': 80, 'version_check': True, 'partial_parse': True, 'static_parser': True, 'profiles_dir': '/Users/rom.weinstein/IdeaProjects/infra-dbt/dbt-server', 'send_anonymous_usage_stats': True, 'quiet': False, 'no_print': False, 'cache_selected_only': False, 'skip_profile_setup': False, 'which': 'init', 'indirect_selection': 'eager'}
+[0m12:11:50.212050 [debug] [MainThread]: Tracking: tracking
+[0m12:11:50.230078 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1245ac700>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1245ac340>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1245ac310>]}
+[0m12:13:08.346748 [debug] [MainThread]: Starter project path: /opt/homebrew/Cellar/dbt-postgres/1.4.1/libexec/lib/python3.9/site-packages/dbt/include/starter_project

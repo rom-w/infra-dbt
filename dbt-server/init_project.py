@@ -243,12 +243,12 @@ state_id = get_hash(state)
 print (state_id)
 
 # POST /push
-# req = requests.post(SERVER_HOST_PUSH, json={"state_id": state_id, "body": state})
-# print("PUSH", req.status_code)
+req = requests.post(SERVER_HOST_PUSH, json={"state_id": state_id, "body": state})
+print("PUSH", req.status_code)
 # # # #
 # # # # # POST /parse
-# req = requests.post(SERVER_HOST_PARSE, json={"state_id": state_id})
-# print("PARSE", req.status_code)
+req = requests.post(SERVER_HOST_PARSE, json={"state_id": state_id})
+print("PARSE", req.status_code)
 
 # resp = requests.post(SERVER_HOST_COMPILE, json={"sql": "select {{ 1 + 1 }}", "target":"dev"})
 # print("resp: ", json.loads(resp.content))
