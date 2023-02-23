@@ -186,6 +186,11 @@ class RunOperationArgs(BaseModel):
     single_threaded: Optional[bool] = None
     args: str = Field(default="{}")
 
+class SQLFetchConfig(BaseModel):
+    state_id: str
+    sql: str
+    model_version: int
+    model_loc: str
 
 class SQLConfig(BaseModel):
     state_id: Optional[str] = None
@@ -421,6 +426,64 @@ async def preview_sql(sql: SQLConfig):
             "compiled_code": compiled_code,
         },
     )
+
+
+
+def read_serialized_manifest(path):
+    try:
+        with open(path, "rb") as fh:
+            return fh.read()
+    except FileNotFoundError as e:
+        raise StateNotFoundException(e)
+
+
+import boto3
+
+# PCSK to dev1
+s = boto3.Session(
+    os.getenv("AWS_ACCESS_KEY_ID"),
+    os.getenv("AWS_SECRET_ACCESS_KEY"),
+    os.getenv("AWS_SESSION_TOKEN"))
+
+s3 = s.resource('s3')
+
+s3client = s.client('s3')
+
+bucket = 'dataagg-storage-datorama-dev1-uswest2-cdp001'
+
+def read_from_s3(path):
+    obj = s3.Object(bucket, path)
+    return obj.get()['Body'].read().decode('utf-8')
+
+state_cache = set()
+
+
+@app.post("/compile_fetch")
+def compile_fetch(sql: SQLFetchConfig):
+    state_id = sql.state_id
+
+    state_ver = "%s_%d" % (state_id, sql.model_version)
+
+    if state_ver not in state_cache:
+        print(state_ver,"is not in cache",state_cache)
+        # import services.filesystem_service_s3 as fs3
+        # import services.filesystem_service as fs
+        storage_state = read_from_s3(sql.model_loc)
+
+        unparsed_manifest = PushProjectArgs.parse_raw(storage_state)
+        unparsed_manifest.state_id = state_ver
+
+        push_unparsed_manifest(unparsed_manifest)
+        parse_args = ParseArgs(state_id = state_ver)
+
+        parse_project(parse_args)
+
+        state_cache.add(state_ver)
+    else:
+        print(state_ver, "is in cache", state_cache)
+
+    return compile_sql(SQLConfig(state_id=state_ver, sql=sql.sql))
+
 
 
 @app.post("/compile")
