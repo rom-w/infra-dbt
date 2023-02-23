@@ -43,4 +43,7 @@ ENTRYPOINT ["python", "runme.py"]
 RUN mkdir /root/.dbt/
 COPY profiles.yml /root/.dbt/
 
+RUN mkdir /root/models/
+COPY modeldump.json /root/models/
+
 ENV DO_NOT_TRACK true

@@ -452,8 +452,11 @@ s3client = s.client('s3')
 bucket = 'dataagg-storage-datorama-dev1-uswest2-cdp001'
 
 def read_from_s3(path):
-    obj = s3.Object(bucket, path)
-    return obj.get()['Body'].read().decode('utf-8')
+    try:
+        with open(path, "rb") as fh:
+            return fh.read()
+    except FileNotFoundError as e:
+        raise StateNotFoundException(e)
 
 state_cache = set()
 
